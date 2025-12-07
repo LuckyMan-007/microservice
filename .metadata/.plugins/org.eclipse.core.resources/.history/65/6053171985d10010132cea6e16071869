@@ -1,0 +1,5 @@
+package com.yon.order_service.service;
+
+public class JwtService {
+
+}

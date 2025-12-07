@@ -1,0 +1,53 @@
+package com.yon.order_service.security;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+
+		try {
+		// TODO Auto-generated method stub
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("authHeader ::: "+authHeader);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String token = authHeader.substring(7);
+
+        if (!jwtService.isValid(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        "user",                    // principal
+                        null,                      // credentials
+                        List.of());                // authorities
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+	
+        // token valid → allow request
+        filterChain.doFilter(request, response);
+	    System.out.println("Finished filter");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+	}
+
+}
