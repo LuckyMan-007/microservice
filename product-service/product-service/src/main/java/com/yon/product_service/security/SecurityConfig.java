@@ -11,27 +11,26 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+//    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
   System.out.println("enter SecurityFilterChain::::::::::::");
         return http
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
-                .disable()
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated()
-            )
+//            .csrf(csrf -> csrf
+//                .ignoringRequestMatchers("/h2-console/**")
+//                .disable()
+//            )
+//            .authorizeHttpRequests(auth -> auth
+//                .requestMatchers("/h2-console/**").permitAll()
+//                .anyRequest().authenticated()
+//            )
             .headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin())
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .frameOptions(frame -> frame.sameOrigin()))
+//            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)      
             .build();
     }
 }
